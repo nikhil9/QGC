@@ -31,6 +31,7 @@ This file is part of the QGROUNDCONTROL project
 #include "CameraView.h"
 #include <QDebug>
 
+
 CameraView::CameraView(int width, int height, int depth, int channels, QWidget* parent) : QGLWidget(parent)
 {
     rawImage = NULL;

@@ -67,7 +67,13 @@ This file is part of the QGROUNDCONTROL project
 #include "SlugsMAV.h"
 
 
+
 #include "LogCompressor.h"
+
+#include <cv.h>
+#include "highgui.h"
+#include "opencv2\core\core.hpp"
+#include "opencv2\highgui\highgui.hpp"
 
 MainWindow* MainWindow::instance(QSplashScreen* screen)
 {
@@ -508,7 +514,7 @@ void MainWindow::buildCommonWidgets()
 
     if (!video1DockWidget)
     {
-        video1DockWidget = new QDockWidget(tr("Video Stream 1"), this);
+        video1DockWidget = new QDockWidget(tr("Video1 Stream 1"), this);
         QGCRGBDView* video1 =  new QGCRGBDView(160, 120, this);
         video1->enableHUDInstruments(false);
         video1->enableVideo(false);

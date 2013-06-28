@@ -5,6 +5,15 @@
 #include "QGCRGBDView.h"
 #include "UASManager.h"
 
+#include <cv.h>
+#include "highgui.h"
+#include "opencv2\core\core.hpp"
+#include "opencv2\highgui\highgui.hpp"
+
+#include "OpenCVGrabFrame.h"
+
+
+
 QGCRGBDView::QGCRGBDView(int width, int height, QWidget *parent) :
     HUD(width, height, parent),
     rgbEnabled(false),
@@ -105,6 +114,10 @@ void QGCRGBDView::enableRGB(bool enabled)
     rgbEnabled = enabled;
     dataStreamEnabled = rgbEnabled | depthEnabled;
     resize(size());
+	OpenCVGrabFrame CVFrame1;
+	CVFrame1.run();
+	
+	
 }
 
 void QGCRGBDView::enableDepth(bool enabled)
