@@ -395,6 +395,8 @@ void HSIDisplay::renderOverlay()
         // Position
         QString str;
         str.sprintf("lat: %05.2f lon: %06.2f alt: %06.2f", lat, lon, alt);
+		//BreakPoint#1 PilotView GPS Print
+		qDebug("lat: %05.6f lon: %06.6f alt: %06.2f", lat, lon, alt);
         paintText(tr("GPS"), QGC::colorCyan, 2.6f, 2, vheight- 2.0f, &painter);
         paintText(str, Qt::white, 2.6f, 10, vheight - 2.0f, &painter);
     }
