@@ -17,7 +17,8 @@
 QGCRGBDView::QGCRGBDView(int width, int height, QWidget *parent) :
     HUD(width, height, parent),
     rgbEnabled(false),
-    depthEnabled(false)
+    depthEnabled(false),
+	OpenCVEnabled(false)
 {
     enableRGBAction = new QAction(tr("Enable RGB Image"), this);
     enableRGBAction->setStatusTip(tr("Show the RGB image live stream in this window"));
@@ -30,6 +31,12 @@ QGCRGBDView::QGCRGBDView(int width, int height, QWidget *parent) :
     enableDepthAction->setCheckable(true);
     enableDepthAction->setChecked(depthEnabled);
     connect(enableDepthAction, SIGNAL(triggered(bool)), this, SLOT(enableDepth(bool)));
+
+	enableOpenCVAction = new QAction(tr("Enable OpenCV Video"), this);
+    enableOpenCVAction->setStatusTip(tr("Show the OpenCV live video in this window"));
+    enableOpenCVAction->setCheckable(true);
+    enableOpenCVAction->setChecked(rgbEnabled);
+    connect(enableOpenCVAction, SIGNAL(triggered(bool)), this, SLOT(enableOpenCV(bool)));
 
     connect(UASManager::instance(), SIGNAL(activeUASSet(UASInterface*)), this, SLOT(setActiveUAS(UASInterface*)));
 
@@ -48,6 +55,7 @@ void QGCRGBDView::storeSettings()
     settings.beginGroup("QGC_RGBDWIDGET");
     settings.setValue("STREAM_RGB_ON", rgbEnabled);
     settings.setValue("STREAM_DEPTH_ON", depthEnabled);
+	settings.setValue("STREAM_OpenCV_ON", OpenCVEnabled);
     settings.endGroup();
     settings.sync();
 }
@@ -98,10 +106,12 @@ void QGCRGBDView::contextMenuEvent(QContextMenuEvent* event)
     //enableVideoAction->setChecked(videoEnabled);
     enableRGBAction->setChecked(rgbEnabled);
     enableDepthAction->setChecked(depthEnabled);
+	enableOpenCVAction->setChecked(OpenCVEnabled);
 
     menu.addAction(enableHUDAction);
     menu.addAction(enableRGBAction);
     menu.addAction(enableDepthAction);
+	menu.addAction(enableOpenCVAction);
     //menu.addAction(selectHUDColorAction);
     //menu.addAction(enableVideoAction);
     //menu.addAction(selectOfflineDirectoryAction);
@@ -114,9 +124,6 @@ void QGCRGBDView::enableRGB(bool enabled)
     rgbEnabled = enabled;
     dataStreamEnabled = rgbEnabled | depthEnabled;
     resize(size());
-	OpenCVGrabFrame CVFrame1;
-	CVFrame1.run();
-	
 	
 }
 
@@ -125,6 +132,16 @@ void QGCRGBDView::enableDepth(bool enabled)
     depthEnabled = enabled;
     dataStreamEnabled = rgbEnabled | depthEnabled;
     resize(size());
+}
+
+void QGCRGBDView::enableOpenCV(bool enabled)
+{
+    OpenCVEnabled = enabled;
+    dataStreamEnabled = rgbEnabled | depthEnabled;
+    resize(size());
+	
+	OpenCVGrabFrame CVFrame1;
+	CVFrame1.run();
 }
 
 float colormapJet[128][3] = {

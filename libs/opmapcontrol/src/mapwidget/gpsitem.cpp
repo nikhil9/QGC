@@ -36,6 +36,7 @@ namespace mapcontrol
        // pic=pic.scaled(50,33,Qt::IgnoreAspectRatio);
         localposition=map->FromLatLngToLocal(mapwidget->CurrentPosition());
         this->setPos(localposition.X(),localposition.Y());
+		qDebug("Local lat: %05.6f Local lon: %06.6f ", localposition.X(), localposition.Y());
         this->setZValue(4);
         trail=new QGraphicsItemGroup();
         trail->setParentItem(map);
