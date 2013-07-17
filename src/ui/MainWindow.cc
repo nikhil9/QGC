@@ -524,6 +524,18 @@ void MainWindow::buildCommonWidgets()
         addTool(video1DockWidget, tr("Video Stream 1"), Qt::LeftDockWidgetArea);
     }
 
+	if (!video3DockWidget)
+    {
+        video3DockWidget = new QDockWidget(tr("Video1 Stream 3"), this);
+        QGCRGBDView* video3 =  new QGCRGBDView(160, 120, this);
+        video3->enableHUDInstruments(false);
+        video3->enableVideo(false);
+        // FIXME select video stream as well
+        video3DockWidget->setWidget(video3);
+        video3DockWidget->setObjectName("VIDEO_STREAM_3_DOCK_WIDGET");
+        addTool(video3DockWidget, tr("Video Stream 3"), Qt::LeftDockWidgetArea);
+    }
+
     if (!video2DockWidget)
     {
         video2DockWidget = new QDockWidget(tr("Video Stream 2"), this);

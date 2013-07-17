@@ -18,13 +18,16 @@ public slots:
     void clearData(void);
     void enableRGB(bool enabled);
     void enableDepth(bool enabled);
+	void enableOpenCV(bool enabled);
     void updateData(UASInterface *uas);
 
 protected:
     bool rgbEnabled;
     bool depthEnabled;
+	bool OpenCVEnabled;
     QAction* enableRGBAction;
     QAction* enableDepthAction;
+	QAction* enableOpenCVAction;
 
     void contextMenuEvent (QContextMenuEvent* event);
     /** @brief Store current configuration of widget */
