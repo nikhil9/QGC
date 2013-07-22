@@ -250,7 +250,7 @@ void QGCMapWidget::updateGlobalPosition(UASInterface* uas, double lat, double lo
         // Set new lat/lon position of UAV icon
         internals::PointLatLng pos_lat_lon = internals::PointLatLng(lat, lon);
         uav->SetUAVPos(pos_lat_lon, alt);
-		qDebug("lat: %05.6f lon: %06.6f",lat, lon);
+		qDebug("lat: %05.2f lon: %06.2f",lat, lon);
         // Follow status
         if (followUAVEnabled && uas->getUASID() == followUAVID) SetCurrentPosition(pos_lat_lon);
         // Convert from radians to degrees and apply

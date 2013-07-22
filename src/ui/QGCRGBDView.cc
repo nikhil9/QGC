@@ -1,6 +1,10 @@
 #include <QMenu>
 #include <QContextMenuEvent>
 #include <QSettings>
+#include <stdio.h>
+#include <sstream>
+#include <string>
+#include <iostream>
 
 #include "QGCRGBDView.h"
 #include "UASManager.h"
@@ -18,7 +22,9 @@ QGCRGBDView::QGCRGBDView(int width, int height, QWidget *parent) :
     HUD(width, height, parent),
     rgbEnabled(false),
     depthEnabled(false),
-	OpenCVEnabled(false)
+	OpenCVEnabled(false),
+	lat(0),
+	lon(0)
 {
     enableRGBAction = new QAction(tr("Enable RGB Image"), this);
     enableRGBAction->setStatusTip(tr("Show the RGB image live stream in this window"));
@@ -40,15 +46,89 @@ QGCRGBDView::QGCRGBDView(int width, int height, QWidget *parent) :
 
     connect(UASManager::instance(), SIGNAL(activeUASSet(UASInterface*)), this, SLOT(setActiveUAS(UASInterface*)));
 
+	cam.open(0);
+	//if(cam.isOpened == FALSE){
+	//	qDebug("Unable to open Camera");
+	//}
+	opencvTimer = new QTimer(this);
+	//cvNamedWindow("OpenCV Video");
+	connect(opencvTimer, SIGNAL(timeout()), this, SLOT(processFrames()));
+	saveTimer = new QTimer(this);
+	saveInterval = 0;
+	numSamples = 0;
+	
+	
+
     clearData();
     loadSettings();
 }
 
+
+
 QGCRGBDView::~QGCRGBDView()
 {
     storeSettings();
+	
+
 }
 
+void QGCRGBDView::processFrames()
+{
+    saveInterval++;
+    cam.read(camFrame);	
+	IplImage* showFrame = new IplImage(camFrame);
+	cvShowImage("OpenCV Video", showFrame);
+	if(saveInterval % 50 == 0){
+		numSamples++;
+		std::stringstream imgName_;// = std::to_string(numSamples);
+		imgName_ << numSamples;
+		std::string imgName(imgName_.str());
+		//const char* FileName = imgName + ".jpg";
+
+		//char fileName[50];
+		//sprintf(fileName, "Sample %d.jpeg",numSamples);
+		//cvSaveImage(fileName,showFrame);
+
+
+		bool isSaved = imwrite("Sample" + imgName + ".jpg",camFrame);
+		if(!isSaved){
+			qDebug("Failed to save Images ");
+		}
+		else{
+			qDebug("Saved Image SuccesFully ");
+			SaveGPSData();
+
+		}
+
+		/*if(gpsDataFil.open(QFile::WriteOnly |QFile::Truncate)){
+			QTextStream strm( &gpsDataFil );
+			QString dataNum = QString::number(numSamples);
+			strm<<dataNum<<endl ;
+			gpsDataFil.close();
+		}*/
+    }
+	//qDebug("lat: %05.6f lon: %06.6f alt: %06.2f", lat, lon, alt);
+	//cam.~VideoCapture();
+
+}
+
+
+void QGCRGBDView::SaveGPSData(){
+
+	
+	QFile gpsdatafile("gpsData.csv");
+	if(!gpsdatafile.open(QFile::WriteOnly | QFile::Text | QFile::Append)){
+		qDebug("Could not open Text File");
+		return;
+	}
+
+	QTextStream dataOut(&gpsdatafile);
+	QString gpsinfo = (QString::number(numSamples) + ", "+ QString::number(lat)+ ", " +  QString::number(lon) + ","+QString::number(alt));
+	dataOut << gpsinfo<< endl;
+	gpsdatafile.flush();
+	gpsdatafile.close();
+
+}
 void QGCRGBDView::storeSettings()
 {
     QSettings settings;
@@ -76,7 +156,8 @@ void QGCRGBDView::setActiveUAS(UASInterface* uas)
     {
         // Disconnect any previously connected active MAV
         disconnect(this->uas, SIGNAL(rgbdImageChanged(UASInterface*)), this, SLOT(updateData(UASInterface*)));
-
+        disconnect(this->uas, SIGNAL(globalPositionChanged(UASInterface*,double,double,double,quint64)), this, SLOT(updateGlobalPosition(UASInterface*,double,double,double,quint64)));
+		isUAV = FALSE;
         clearData();
     }
 
@@ -85,6 +166,9 @@ void QGCRGBDView::setActiveUAS(UASInterface* uas)
         // Now connect the new UAS
         // Setup communication
         connect(uas, SIGNAL(rgbdImageChanged(UASInterface*)), this, SLOT(updateData(UASInterface*)));
+	    connect(uas, SIGNAL(globalPositionChanged(UASInterface*,double,double,double,quint64)), this, SLOT(updateGlobalPosition(UASInterface*,double,double,double,quint64)));
+		isUAV = TRUE;
+
     }
 
     HUD::setActiveUAS(uas);
@@ -96,6 +180,15 @@ void QGCRGBDView::clearData(void)
     qDebug() << offlineImg.load(":/files/images/status/colorbars.png");
 
     glImage = QGLWidget::convertToGLFormat(offlineImg);
+}
+
+void QGCRGBDView::updateGlobalPosition(UASInterface*, double lat, double lon, double alt, quint64 usec)
+{
+    this->lat = lat;
+    this->lon = lon;
+    this->alt = alt;
+    //globalAvailable = usec;
+	//qDebug("lat: %05.6f lon: %06.6f alt: %06.2f", lat, lon, alt);
 }
 
 void QGCRGBDView::contextMenuEvent(QContextMenuEvent* event)
@@ -139,9 +232,19 @@ void QGCRGBDView::enableOpenCV(bool enabled)
     OpenCVEnabled = enabled;
     dataStreamEnabled = rgbEnabled | depthEnabled;
     resize(size());
-	
-	OpenCVGrabFrame CVFrame1;
-	CVFrame1.run();
+	if(OpenCVEnabled)
+		{
+		   opencvTimer->start(20);
+		   saveTimer->start();
+		}
+	else
+		{
+		   opencvTimer->stop();
+		   saveTimer->stop();
+		}
+	//OpenCVGrabFrame CVFrame1;
+	//CVFrame1.run();
+
 }
 
 float colormapJet[128][3] = {

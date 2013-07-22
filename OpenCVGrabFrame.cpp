@@ -10,7 +10,7 @@
 
 OpenCVGrabFrame::OpenCVGrabFrame()
 {
-gpsFix = 1;
+gpsFix = 0;
 lat = 0;
 lon = 0;
 alt = 0;
@@ -43,6 +43,7 @@ void OpenCVGrabFrame::updateGlobalPosition(UASInterface* uas,double lat, double 
     this->lat = lat;
     this->lon = lon;
     this->alt = altitude;
+	qDebug("OpenCV lat: %05.6f lon: %06.6f alt: %06.2f", lat, lon, alt);
 }
 
 void OpenCVGrabFrame::updateGpsLocalization(UASInterface* uas, int fix)

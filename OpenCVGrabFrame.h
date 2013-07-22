@@ -22,9 +22,10 @@ public:
 	int lineWidth;
 
 public slots:
+	void setActiveUAS(UASInterface* uas);
 	void updateGlobalPosition(UASInterface*,double,double,double,quint64);
 	void updateGpsLocalization(UASInterface* uas, int localization);
-	virtual void setActiveUAS(UASInterface* uas);
+	///virtual void setActiveUAS(UASInterface* uas);
 protected:
 	UASInterface* uas;
 };

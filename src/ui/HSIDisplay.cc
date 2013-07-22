@@ -45,6 +45,10 @@ This file is part of the QGROUNDCONTROL project
 #include "MAV2DIcon.h"
 
 #include <QDebug>
+#include "opencv2\core\core.hpp"
+#include "opencv2\highgui\highgui.hpp"
+
+#include "OpenCVGrabFrame.h"
 
 
 HSIDisplay::HSIDisplay(QWidget *parent) :
@@ -386,6 +390,7 @@ void HSIDisplay::renderOverlay()
         QString str;
         float offset = (globalAvailable > 0) ? -3.0f : 0.0f;
         str.sprintf("%05.2f %05.2f %05.2f m", x, y, z);
+		qDebug("lat: %05.6f lon: %05.6f alt: %05.2f", x, y, z);
         paintText(tr("POS"), QGC::colorCyan, 2.6f, 2, vheight - offset - 2.0f, &painter);
         paintText(str, Qt::white, 2.6f, 10, vheight - offset - 2.0f, &painter);
     }
@@ -395,8 +400,9 @@ void HSIDisplay::renderOverlay()
         // Position
         QString str;
         str.sprintf("lat: %05.2f lon: %06.2f alt: %06.2f", lat, lon, alt);
+
 		//BreakPoint#1 PilotView GPS Print
-		qDebug("lat: %05.6f lon: %06.6f alt: %06.2f", lat, lon, alt);
+		//qDebug("lat: %05.6f lon: %06.6f alt: %06.2f", lat, lon, alt);
         paintText(tr("GPS"), QGC::colorCyan, 2.6f, 2, vheight- 2.0f, &painter);
         paintText(str, Qt::white, 2.6f, 10, vheight - 2.0f, &painter);
     }
