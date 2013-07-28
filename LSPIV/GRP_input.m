@@ -9,6 +9,8 @@ pause(1)
 
 disp(filename)
 Name_img=fullfile(pathname,filename);
+out_dir = 'outputs';
+
 temp_file=fopen([out_dir,'temp_img.dat'],'w');
 fprintf(temp_file,'%s',Name_img);
 fclose(temp_file);

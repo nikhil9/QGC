@@ -9,21 +9,25 @@ disp(' Select the images to process');
 
 list_path=[out_dir,'images_list.dat'];
 img_list_file=fopen(list_path,'w');
-%setappdata(0,'UseNativeSystemDialogs',false);
-%[FileName,PathName] = uigetfile({'*.jpg;*.bmp;*.tif;*.png;*.gif','Image Files (*.jpg,*.bmp,*.tif,*.png,*.gif)';'*.*','All Files (*.*)'},' Select the images to process','MultiSelect','on');
-[FileName,PathName] = uigetfiles('*.*; *.*', 'Choose your files');
+setappdata(0,'UseNativeSystemDialogs',false);
+[FileName,PathName] = uigetfile({'*.jpg;*.bmp;*.tif;*.png;*.gif','Image Files (*.jpg,*.bmp,*.tif,*.png,*.gif)';'*.*','All Files (*.*)'},' Select the images to process','MultiSelect','on');
+%[FileName,PathName] = uigetfiles('*.*; *.*', 'Choose your files');
+
 name_list=sort(FileName);
+%disp('debug' +name_list);
 fprintf(img_list_file,'%s \n',name_list{1,:});
 status=fclose(img_list_file);
 img_list_file=fopen(list_path,'r');
 
-fmt_path=[out_dir,'Img_format.dat'];
+fmt_path=[LSPIV_dir,'outputsImg_format.dat'];
+disp(fmt_path);
 Img_fmt_file=fopen(fmt_path,'r');
+disp(Img_fmt_file);
 Img_fmt=fscanf(Img_fmt_file,'%s',1);
 b=zeros(9);
 gg=[];
  
-ref_path=[out_dir,'img_ref.dat'];
+ref_path=[LSPIV_dir,'outputsimg_ref.dat'];
 img_ref=fopen(ref_path,'r');
 bla=fscanf(img_ref,'%s',1);
 min_coord=fscanf(img_ref,'%g %g',2);
@@ -32,7 +36,7 @@ max_coord=fscanf(img_ref,'%g %g',2);
 bla=fscanf(img_ref,'%s',1);
 resol=fscanf(img_ref,'%g',1);
  
-coeff_path=[out_dir,'coeff.dat'];
+coeff_path=[LSPIV_dir,'outputscoeff.dat'];
 coeff=fopen(coeff_path,'r');
 a=fscanf(coeff,'%g',8);
 

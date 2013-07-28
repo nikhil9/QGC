@@ -162,7 +162,7 @@ else
       end
    end
    
-   uirestore(state);
+  % uirestore(state);
    if ~isempty(toolbar) && ~isempty(ptButtons)
         set (ptButtons(1),'Enable',ptState{1});
         set (ptButtons(2),'Enable',ptState{2});

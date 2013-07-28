@@ -1,7 +1,7 @@
 close(1);
 clear size;
 %Images parameters
-ref_path=[out_dir,'img_ref.dat'];
+ref_path=[LSPIV_dir,'outputsimg_ref.dat'];
 Img_file=fopen(ref_path,'r');
 bla=fscanf(Img_file,'%s',1);
 min_coord=fscanf(Img_file,'%g %g',[2]);

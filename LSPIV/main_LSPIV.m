@@ -1,4 +1,4 @@
-function main_LSPIV,
+function main_LSPIV
 
 cell_list = {};
 

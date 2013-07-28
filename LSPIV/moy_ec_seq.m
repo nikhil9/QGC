@@ -2,7 +2,7 @@ cla
 moy_path=[out_dir,'average_vel.dat'];
 moy_file=fopen(moy_path,'w');
 
-ref_path=[out_dir,'img_ref.dat'];
+ref_path=[out_dir,'../outputsimg_ref.dat'];
 img_ref=fopen(ref_path,'r');
 bla=fscanf(img_ref,'%s',1);
 min_coord=fscanf(img_ref,'%g %g',[2]);
