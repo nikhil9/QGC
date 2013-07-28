@@ -1,0 +1,29 @@
+Help on the transformation parameterization
+###########################################
+
+The aim of this step is to define the size and the resolution of the orthorectified images.
+Click on Display Survey to open a window showing the GRPs. This window helps you defining 
+the ortho-image corners position. As the ortho-image has a rectangular shape, you need to 
+input the position, in space coordinates, of 2 opposite corners of the image ([Xmin,Ymin] 
+and [Xmax,Ymax]).
+
+The resolution is the space size covered by one pixel. For example, if the Cartesian unit
+used is meter, a resolution of 0.01 means that a pixel covers a physical size of 1*1 cm².
+The more the resolution is a small number, the more the ortho-image will be detailed, and 
+the more the computational time will be important. It is no use to put a too good resolution
+if the study does not require it. A rule of thumb is that the size of the otho-image 
+([Xmax-Xmin]/Resolution) should be nearly the same than the size of the raw image.
+
+An efficient procedure to get a good ortho-image is:
+  1- Display the survey
+  2- Define roughly the positions Xmin, Ymin, Xmax and Ymax so that all the GRPs are included 
+     in the rectangle of opposite corners [Xmin,Ymin] and [Xmax,Ymax].
+  3- Input those values in the GUI window.
+  4- Input a bad resolution (small ortho-image, but fast computational time)
+  5- Click on Compute
+  6- Check on the displayed ortho-image if the corners positions are good. Adjust the positions 
+     and Compute until you\rquote re satisfied.
+  7- When satisfied with the corner position, input the final resolution and compute.
+
+The ortho-image parameters are stored in the file outputs/img_ref.dat
+ 

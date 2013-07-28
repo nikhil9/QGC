@@ -1,0 +1,17 @@
+disp('  ');
+disp('#########################################');
+disp(' Select the recording type');
+disp('  ');
+seq_path=[out_dir,'seq_pair.dat'];
+seq_pair=fopen(seq_path,'w');
+choice=input('1 - Sequence of images / 2 - Image pairs:    ','s');
+if (choice == '1');
+    fprintf(seq_pair,'%s','Sequence');
+    run PIV_seq;
+elseif (choice =='2');
+    fprintf(seq_pair,'%s','Pairs');
+    run PIV_pairs;
+end;
+disp('  ');
+status = fclose('all');
+display('END');
